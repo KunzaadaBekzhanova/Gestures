@@ -1,20 +1,22 @@
 package kg.tutorialapp.gestures
 
 import android.os.Bundle
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GestureDetectorCompat
 import java.lang.Math.abs
 
 class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener{
-    var showTextView :(TextView) = findViewById(R.id.showAction)
+    private lateinit var showTextView : TextView
+    private lateinit var gestureDetector: GestureDetectorCompat
 
-    lateinit var gestureDetector: GestureDetector
-    var x2:Float = 0.0f
-    var x1:Float = 0.0f
-    var y2:Float = 0.0f
-    var y1:Float = 0.0f
+    private var x2:Float = 0.0f
+    private var x1:Float = 0.0f
+    private var y2:Float = 0.0f
+    private var y1:Float = 0.0f
 
     companion object{
         const val MIN_DISTANCE = 150
@@ -23,62 +25,28 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        gestureDetector = GestureDetector(this, this)
+        showTextView = findViewById(R.id.showAction)
+        gestureDetector = GestureDetectorCompat(this, this)
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        setContentView(R.layout.activity_main)
-        gestureDetector.onTouchEvent(event)
-
-        when (event?.action){
-            0->
-            {
-                x1=event.x
-                y1=event.y
-            }
-            1->
-            {
-                x2=event.x
-                y2=event.y
-
-                val valueX:Float = x2-x1
-                val valueY:Float = y2-y1
-                if (abs(valueX)> MIN_DISTANCE)
-                {
-                    if (x2>x1)
-                    {
-                        showTextView?.setText("Right Swipe")
-                    }
-                    else
-                    {
-                        showTextView?.setText("Left Swipe")
-                    }
-                }
-                else if (abs(valueY)> MIN_DISTANCE)
-                {
-                    if (y2>y1) showTextView?.setText("Bottom swipe")
-
-                    else showTextView?.setText("TOP Swipe")
-                }
-            }
-        }
-
-        return super.onTouchEvent(event)
+        Log.e("MainActivity", "onTouchEvent event= $event")
+        return gestureDetector.onTouchEvent(event)
 
     }
 
     override fun onDown(e: MotionEvent?): Boolean {
-        //TODO("Not yet implemented")
-        return false
+        showTextView.text = "onDown\n x= ${e?.x}, y= ${e?.y}"
+        return true
     }
 
     override fun onShowPress(e: MotionEvent?) {
-        //TODO("Not yet implemented")
+        showTextView.text = "onShowPress\n x= ${e?.x}, y= ${e?.y}"
     }
 
     override fun onSingleTapUp(e: MotionEvent?): Boolean {
-        //TODO("Not yet implemented")
-        return false
+        showTextView.text = "onSingleTapUp\n x= ${e?.x}, y= ${e?.y}"
+        return true
     }
 
     override fun onScroll(
@@ -87,12 +55,12 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener{
         distanceX: Float,
         distanceY: Float
     ): Boolean {
-        //TODO("Not yet implemented")
-        return false
+        showTextView.text = "onScroll\n e1= ${e1}, \n e2= ${e2}"
+        return true
     }
 
     override fun onLongPress(e: MotionEvent?) {
-        //TODO("Not yet implemented")
+        showTextView.text = "onLongPress\n x= ${e?.x}, y= ${e?.y}"
     }
 
     override fun onFling(
@@ -101,7 +69,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener{
         velocityX: Float,
         velocityY: Float
     ): Boolean {
-       // TODO("Not yet implemented")
-        return false
+        showTextView.text = "onFling\n e1= ${e1}, \n e2= ${e2}"
+        return true
     }
 }
